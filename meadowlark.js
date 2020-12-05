@@ -3,13 +3,14 @@ var express = require('express');
 
 var app = express();
 
-var handlebars = require('express-handlebars').create({ defaultLayout:'main' });
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
+var hbs = require('express-handlebars').create({ defaultLayout:'main', extname: 'hbs' });
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
 
 app.set('port', process.env.PORT || 3000);
 
 app.use(express.static(__dirname + '/public'));
+
 
 app.get('/', function(req, res) {
     res.render('home');

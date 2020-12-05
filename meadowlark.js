@@ -1,9 +1,20 @@
 var fortune = require('./lib/fortune.js');
 var express = require('express');
+const { getWeatherData } = require('./lib/weatherData.js');
 
 var app = express();
 
-var hbs = require('express-handlebars').create({ defaultLayout:'main', extname: 'hbs' });
+var hbs = require('express-handlebars').create({ 
+    defaultLayout:'main', 
+    extname: 'hbs',
+    helpers: {
+        section: function(name, options) {
+        if(!this._sections) this._sections = {};
+        this._sections[name] = options.fn(this);
+        return null;
+        }
+    }
+});
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
@@ -11,13 +22,17 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(express.static(__dirname + '/public'));
 
-
+app.use(function(req, res, next) {
+    if(!res.locals.partials) res.locals.partials = {};
+    res.locals.partials.weatherContext = getWeatherData();
+    next();
+});
 app.get('/', function(req, res) {
     res.render('home');
 });
 
 app.get('/about', function(req, res) {
-    res.render('about', {fortune: fortune.getFortune()});
+    res.render('about', {layout: 'aboutLay', fortune: fortune.getFortune()});
 });
 
 app.use(function(req, res, next){

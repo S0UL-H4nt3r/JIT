@@ -34,7 +34,20 @@ app.get('/', function(req, res) {
 app.get('/about', function(req, res) {
     res.render('about', {layout: 'aboutLay', fortune: fortune.getFortune()});
 });
-
+app.get('/jquery-test', function(req, res){
+	res.render('jquery-test');
+});
+app.get('/nursery-rhyme', function(req, res){
+    res.render('nursery-rhyme');
+   });
+   app.get('/data/nursery-rhyme', function(req, res){
+    res.json({
+    animal: 'бельчонок',
+    bodyPart: 'хвост',
+    adjective: 'пушистый',
+    noun: 'черт',
+    });
+   });
 app.use(function(req, res, next){
     res.status(404);
     res.render('404');
